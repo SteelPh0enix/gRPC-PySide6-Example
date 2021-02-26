@@ -21,8 +21,10 @@ Window {
 
         RowLayout {
             id: connectionFieldsLayout
+            Layout.minimumHeight: 20
+            Layout.maximumHeight: 30
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.preferredHeight:  25
+            Layout.preferredHeight:  20
             Layout.fillWidth: true
             Layout.fillHeight: false
 
@@ -41,14 +43,17 @@ Window {
             Button {
                 id: grpcConnectButton
                 text: qsTr("Connect")
+                Layout.fillHeight: true
                 Layout.preferredWidth: 100
             }
         }
 
         RowLayout {
             id: statusLayout
+            Layout.minimumHeight: 40
+            Layout.maximumHeight: 50
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.preferredHeight: 30
+            Layout.preferredHeight: 50
             Layout.fillWidth: true
             Layout.fillHeight: false
 
@@ -67,20 +72,68 @@ Window {
             }
         }
 
+        TextField {
+            id: simpleMessageField
+            Layout.preferredHeight: 20
+            Layout.maximumHeight: 20
+            Layout.minimumHeight: 20
+            placeholderText: qsTr("Message")
+            Layout.fillWidth: true
+        }
+
+        TextArea {
+            id: responseTextArea
+            text: ""
+            font.pointSize: 10
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            placeholderText: qsTr("Server's responses")
+            readOnly: true
+        }
+
         RowLayout {
             id: simpleMessageLayout
+            Layout.minimumHeight: 25
+            Layout.maximumHeight: 50
+            Layout.preferredHeight: 50
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-
-            TextField {
-                id: textField
-                placeholderText: qsTr("Text Field")
-                Layout.fillWidth: true
-            }
 
             Button {
                 id: buttonSendSimpleMessage
-                text: qsTr("Send simple message")
+                text: qsTr("Message-to-message")
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Button {
+                id: buttonSendStreamingMessage
+                text: qsTr("Message-to-stream")
+                flat: false
+                autoRepeat: false
+                display: AbstractButton.TextOnly
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Button {
+                id: buttonReceiveStreamingResponse
+                text: qsTr("Stream-to-message")
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Button {
+                id: buttonStreamMessages
+                text: qsTr("Stream-to-stream")
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
         }
+
+
     }
 }

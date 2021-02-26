@@ -27,3 +27,7 @@ python ./main_server.py --ip 127.1.2.3 8080
 
 And then, run the client. Enter the IP address and port in GUI, and try to send some data.
 The debug output will be present in console.
+
+## Misc
+
+If you want to change and re-generate the protocols, just run `generate_grpc.sh` (under Linux) or `generate_grpc.bat` (under Windows).
