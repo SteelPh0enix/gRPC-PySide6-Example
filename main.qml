@@ -11,11 +11,11 @@ Window {
     title: qsTr("gRPC + PySide6 Example")
 
     function printLine(message) {
-        responseTextArea.text += message + '\n'
+        responseTextArea.text += message + "\n"
     }
 
     function printResponse(id, timestamp, response) {
-        var text_line = 'Response #' + id + ' @ ' + timestamp + ': ' + response + '\n'
+        var text_line = "Response #" + id + " @ " + timestamp + ": " + response + "\n"
         responseTextArea.text += text_line
     }
 
@@ -48,6 +48,7 @@ Window {
             TextField {
                 id: grpcIPField
                 placeholderText: qsTr("Server's IP address")
+                text: qsTr("127.0.0.1")
                 Layout.fillWidth: true
             }
 
@@ -64,7 +65,7 @@ Window {
                 Layout.preferredWidth: 100
 
                 onClicked: {
-
+                    uiController.connectToServer(grpcIPField.text, grpcPortField.text)
                 }
             }
         }
@@ -86,7 +87,7 @@ Window {
 
             Label {
                 id: statusLabelValue
-                text: qsTr("Disconnected")
+                text: uiController.connectionStatus
                 font.pointSize: 12
                 font.bold: true
                 Layout.fillWidth: true

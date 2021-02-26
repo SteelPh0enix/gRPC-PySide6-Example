@@ -31,3 +31,18 @@ The debug output will be present in console.
 ## Misc
 
 If you want to change and re-generate the protocols, just run `generate_grpc.sh` (under Linux) or `generate_grpc.bat` (under Windows).
+**You also HAVE TO modify the import in `ExampleService_pb2_grpc.py` file, because of the project structure.**
+
+Change
+
+```python
+import ExampleService_pb2 as ExampleService__pb2
+```
+
+to
+
+```python
+import proto.ExampleService_pb2 as ExampleService__pb2
+```
+
+at the top of the file.
