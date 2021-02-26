@@ -3,7 +3,10 @@ syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 
 service ExampleService {
-  rpc SendSimpleMessage(SimpleExampleMessage) returns (SimpleExampleResponse) {}
+  rpc MessageToMessageExample(SimpleExampleMessage) returns (SimpleExampleResponse) {}
+  rpc MessageToStreamExample(SimpleExampleMessage) returns (stream SimpleExampleResponse) {}
+  rpc StreamToMessageExample(stream SimpleExampleMessage) returns (SimpleExampleResponse) {}
+  rpc StreamToStreamExample(stream SimpleExampleMessage) returns (stream SimpleExampleResponse) {}
 }
 
 message SimpleExampleMessage {

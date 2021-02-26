@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x14\x45xampleService.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"b\n\x14SimpleExampleMessage\x12\n\n\x02id\x18\x01 \x01(\x05\x12-\n\ttimestamp\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07message\x18\x03 \x01(\t\"c\n\x15SimpleExampleResponse\x12\n\n\x02id\x18\x01 \x01(\x05\x12-\n\ttimestamp\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07message\x18\x03 \x01(\t2V\n\x0e\x45xampleService\x12\x44\n\x11SendSimpleMessage\x12\x15.SimpleExampleMessage\x1a\x16.SimpleExampleResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x14\x45xampleService.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"b\n\x14SimpleExampleMessage\x12\n\n\x02id\x18\x01 \x01(\x05\x12-\n\ttimestamp\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07message\x18\x03 \x01(\t\"c\n\x15SimpleExampleResponse\x12\n\n\x02id\x18\x01 \x01(\x05\x12-\n\ttimestamp\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07message\x18\x03 \x01(\t2\xc4\x02\n\x0e\x45xampleService\x12J\n\x17MessageToMessageExample\x12\x15.SimpleExampleMessage\x1a\x16.SimpleExampleResponse\"\x00\x12K\n\x16MessageToStreamExample\x12\x15.SimpleExampleMessage\x1a\x16.SimpleExampleResponse\"\x00\x30\x01\x12K\n\x16StreamToMessageExample\x12\x15.SimpleExampleMessage\x1a\x16.SimpleExampleResponse\"\x00(\x01\x12L\n\x15StreamToStreamExample\x12\x15.SimpleExampleMessage\x1a\x16.SimpleExampleResponse\"\x00(\x01\x30\x01\x62\x06proto3'
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -147,13 +147,43 @@ _EXAMPLESERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=258,
-  serialized_end=344,
+  serialized_start=259,
+  serialized_end=583,
   methods=[
   _descriptor.MethodDescriptor(
-    name='SendSimpleMessage',
-    full_name='ExampleService.SendSimpleMessage',
+    name='MessageToMessageExample',
+    full_name='ExampleService.MessageToMessageExample',
     index=0,
+    containing_service=None,
+    input_type=_SIMPLEEXAMPLEMESSAGE,
+    output_type=_SIMPLEEXAMPLERESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='MessageToStreamExample',
+    full_name='ExampleService.MessageToStreamExample',
+    index=1,
+    containing_service=None,
+    input_type=_SIMPLEEXAMPLEMESSAGE,
+    output_type=_SIMPLEEXAMPLERESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='StreamToMessageExample',
+    full_name='ExampleService.StreamToMessageExample',
+    index=2,
+    containing_service=None,
+    input_type=_SIMPLEEXAMPLEMESSAGE,
+    output_type=_SIMPLEEXAMPLERESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='StreamToStreamExample',
+    full_name='ExampleService.StreamToStreamExample',
+    index=3,
     containing_service=None,
     input_type=_SIMPLEEXAMPLEMESSAGE,
     output_type=_SIMPLEEXAMPLERESPONSE,

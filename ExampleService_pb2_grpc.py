@@ -14,8 +14,23 @@ class ExampleServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.SendSimpleMessage = channel.unary_unary(
-                '/ExampleService/SendSimpleMessage',
+        self.MessageToMessageExample = channel.unary_unary(
+                '/ExampleService/MessageToMessageExample',
+                request_serializer=ExampleService__pb2.SimpleExampleMessage.SerializeToString,
+                response_deserializer=ExampleService__pb2.SimpleExampleResponse.FromString,
+                )
+        self.MessageToStreamExample = channel.unary_stream(
+                '/ExampleService/MessageToStreamExample',
+                request_serializer=ExampleService__pb2.SimpleExampleMessage.SerializeToString,
+                response_deserializer=ExampleService__pb2.SimpleExampleResponse.FromString,
+                )
+        self.StreamToMessageExample = channel.stream_unary(
+                '/ExampleService/StreamToMessageExample',
+                request_serializer=ExampleService__pb2.SimpleExampleMessage.SerializeToString,
+                response_deserializer=ExampleService__pb2.SimpleExampleResponse.FromString,
+                )
+        self.StreamToStreamExample = channel.stream_stream(
+                '/ExampleService/StreamToStreamExample',
                 request_serializer=ExampleService__pb2.SimpleExampleMessage.SerializeToString,
                 response_deserializer=ExampleService__pb2.SimpleExampleResponse.FromString,
                 )
@@ -24,7 +39,25 @@ class ExampleServiceStub(object):
 class ExampleServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def SendSimpleMessage(self, request, context):
+    def MessageToMessageExample(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MessageToStreamExample(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def StreamToMessageExample(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def StreamToStreamExample(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,8 +66,23 @@ class ExampleServiceServicer(object):
 
 def add_ExampleServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'SendSimpleMessage': grpc.unary_unary_rpc_method_handler(
-                    servicer.SendSimpleMessage,
+            'MessageToMessageExample': grpc.unary_unary_rpc_method_handler(
+                    servicer.MessageToMessageExample,
+                    request_deserializer=ExampleService__pb2.SimpleExampleMessage.FromString,
+                    response_serializer=ExampleService__pb2.SimpleExampleResponse.SerializeToString,
+            ),
+            'MessageToStreamExample': grpc.unary_stream_rpc_method_handler(
+                    servicer.MessageToStreamExample,
+                    request_deserializer=ExampleService__pb2.SimpleExampleMessage.FromString,
+                    response_serializer=ExampleService__pb2.SimpleExampleResponse.SerializeToString,
+            ),
+            'StreamToMessageExample': grpc.stream_unary_rpc_method_handler(
+                    servicer.StreamToMessageExample,
+                    request_deserializer=ExampleService__pb2.SimpleExampleMessage.FromString,
+                    response_serializer=ExampleService__pb2.SimpleExampleResponse.SerializeToString,
+            ),
+            'StreamToStreamExample': grpc.stream_stream_rpc_method_handler(
+                    servicer.StreamToStreamExample,
                     request_deserializer=ExampleService__pb2.SimpleExampleMessage.FromString,
                     response_serializer=ExampleService__pb2.SimpleExampleResponse.SerializeToString,
             ),
@@ -49,7 +97,7 @@ class ExampleService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def SendSimpleMessage(request,
+    def MessageToMessageExample(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,7 +107,58 @@ class ExampleService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ExampleService/SendSimpleMessage',
+        return grpc.experimental.unary_unary(request, target, '/ExampleService/MessageToMessageExample',
+            ExampleService__pb2.SimpleExampleMessage.SerializeToString,
+            ExampleService__pb2.SimpleExampleResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def MessageToStreamExample(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/ExampleService/MessageToStreamExample',
+            ExampleService__pb2.SimpleExampleMessage.SerializeToString,
+            ExampleService__pb2.SimpleExampleResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def StreamToMessageExample(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_unary(request_iterator, target, '/ExampleService/StreamToMessageExample',
+            ExampleService__pb2.SimpleExampleMessage.SerializeToString,
+            ExampleService__pb2.SimpleExampleResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def StreamToStreamExample(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_stream(request_iterator, target, '/ExampleService/StreamToStreamExample',
             ExampleService__pb2.SimpleExampleMessage.SerializeToString,
             ExampleService__pb2.SimpleExampleResponse.FromString,
             options, channel_credentials,
