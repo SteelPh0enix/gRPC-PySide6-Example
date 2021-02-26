@@ -14,9 +14,17 @@ Window {
         responseTextArea.text += message + '\n'
     }
 
-    function printResponse(timestamp, id, response) {
+    function printResponse(id, timestamp, response) {
         var text_line = 'Response #' + id + ' @ ' + timestamp + ': ' + response + '\n'
         responseTextArea.text += text_line
+    }
+
+    Connections {
+        id: responseConnection
+        target: uiController
+        function onResponseReceived(id, timestamp, data) {
+            printResponse(id, timestamp, data)
+        }
     }
 
     ColumnLayout {
@@ -123,7 +131,7 @@ Window {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-
+                    uiController.sendMessageGetMessage(simpleMessageField.text)
                 }
             }
 
@@ -137,7 +145,7 @@ Window {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-
+                    uiController.sendMessageGetStream(simpleMessageField.text)
                 }
             }
 
@@ -149,7 +157,7 @@ Window {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-
+                    uiController.sendStreamGetMessage(simpleMessageField.text)
                 }
             }
 
@@ -161,7 +169,7 @@ Window {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-
+                    uiController.sendStreamGetStream(simpleMessageField.text)
                 }
             }
         }
