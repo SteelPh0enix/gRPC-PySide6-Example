@@ -1,17 +1,19 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 service ExampleService {
   rpc SendSimpleMessage(SimpleExampleMessage) returns (SimpleExampleResponse) {}
 }
 
 message SimpleExampleMessage {
   int32 id = 1;
-  Timestamp timestamp = 2;
+  google.protobuf.Timestamp timestamp = 2;
   string message = 3;
 }
 
 message SimpleExampleResponse {
   int32 id = 1;
-  Timestamp timestamp = 2;
+  google.protobuf.Timestamp timestamp = 2;
   string message = 3;
 }
