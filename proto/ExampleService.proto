@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+service ExampleService {
+  rpc SendSimpleMessage(SimpleExampleMessage) returns (SimpleExampleResponse) {}
+}
+
+message SimpleExampleMessage {
+  int32 id = 1;
+  Timestamp timestamp = 2;
+  string message = 3;
+}
+
+message SimpleExampleResponse {
+  int32 id = 1;
+  Timestamp timestamp = 2;
+  string message = 3;
+}
