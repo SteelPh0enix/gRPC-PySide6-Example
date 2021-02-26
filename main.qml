@@ -10,6 +10,15 @@ Window {
     visible: true
     title: qsTr("gRPC + PySide6 Example")
 
+    function printLine(message) {
+        responseTextArea.text += message + '\n'
+    }
+
+    function printResponse(timestamp, id, response) {
+        var text_line = 'Response #' + id + ' @ ' + timestamp + ': ' + response + '\n'
+        responseTextArea.text += text_line
+    }
+
     ColumnLayout {
         id: mainWindowLayout
         anchors.fill: parent
@@ -45,6 +54,10 @@ Window {
                 text: qsTr("Connect")
                 Layout.fillHeight: true
                 Layout.preferredWidth: 100
+
+                onClicked: {
+
+                }
             }
         }
 
@@ -81,14 +94,18 @@ Window {
             Layout.fillWidth: true
         }
 
-        TextArea {
-            id: responseTextArea
-            text: ""
-            font.pointSize: 10
+        ScrollView {
+            id: responseTextAreaView
             Layout.fillHeight: true
             Layout.fillWidth: true
-            placeholderText: qsTr("Server's responses")
-            readOnly: true
+
+            TextArea {
+                id: responseTextArea
+                text: ""
+                font.pointSize: 10
+                placeholderText: qsTr("Server's responses")
+                readOnly: true
+            }
         }
 
         RowLayout {
@@ -104,17 +121,24 @@ Window {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+
+                }
             }
 
             Button {
                 id: buttonSendStreamingMessage
                 text: qsTr("Message-to-stream")
                 flat: false
-                autoRepeat: false
                 display: AbstractButton.TextOnly
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+
+                }
             }
 
             Button {
@@ -123,6 +147,10 @@ Window {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+
+                }
             }
 
             Button {
@@ -131,6 +159,10 @@ Window {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+
+                }
             }
         }
 
