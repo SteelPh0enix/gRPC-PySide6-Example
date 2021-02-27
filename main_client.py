@@ -49,7 +49,7 @@ class GUIController(QObject):
             except Exception as e:
                 self.responseError.emit(
                     'Communication error - check stdout for details')
-                print(e)
+                logging.error(e)
                 return
 
     @Slot(str)
@@ -88,7 +88,7 @@ class GUIController(QObject):
                 'Unknown error occurred while connecting, check stdout for details')
             del self.grpc_client
             self.grpc_client = None
-            print(e)
+            logging.error(e)
             return
 
         self.set_connection_status('Connected!')
@@ -109,5 +109,5 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig()
+    logging.basicConfig(level=logging.DEBUG)
     main()
