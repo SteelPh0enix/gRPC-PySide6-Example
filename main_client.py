@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
 import os
+import logging
 
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
@@ -93,7 +94,7 @@ class GUIController(QObject):
         self.set_connection_status('Connected!')
 
 
-if __name__ == "__main__":
+def main():
     app = QGuiApplication(sys.argv)
 
     controller = GUIController(app)
@@ -105,3 +106,8 @@ if __name__ == "__main__":
     if not engine.rootObjects():
         sys.exit(-1)
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    logging.basicConfig()
+    main()

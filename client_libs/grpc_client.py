@@ -10,7 +10,7 @@ class GRPCClient():
     def __init__(self, ip, port):
         self.channel = grpc.insecure_channel(f'{ip}:{port}')
         self.stub = example_grpc.ExampleServiceStub(self.channel)
-        self.id = 0
+        self.message_id = 0
 
     def create_timestamp(self) -> Timestamp:
         now = time.time()
@@ -33,6 +33,6 @@ class GRPCClient():
             else:
                 raise rpc_error
 
-        self.id += 1
+        self.message_id += 1
         return (pb_response.id, self.parse_timestamp(pb_response.timestamp), pb_response.message)
 
