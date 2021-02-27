@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Iterator, Tuple
 from google.protobuf.timestamp_pb2 import Timestamp
 from proto import ExampleService_pb2_grpc as example_grpc
 from proto import ExampleService_pb2 as example_pb2
@@ -29,10 +29,26 @@ class GRPCClient():
             pb_response = self.stub.MessageToMessageExample(pb_message)
         except grpc.RpcError as rpc_error:
             if rpc_error.code() == grpc.StatusCode.UNAVAILABLE:
-                raise RuntimeError('Cannot connect to server, make sure it\'s running!') from rpc_error
+                raise RuntimeError(
+                    'Cannot connect to server, make sure it\'s running!') from rpc_error
             else:
                 raise rpc_error
 
         self.message_id += 1
         return (pb_response.id, self.parse_timestamp(pb_response.timestamp), pb_response.message)
 
+    def send_message_receive_stream(self, msg: str) -> Iterator:
+        pb_message = example_pb2.SimpleExampleMessage(
+            id=self.message_id, timestamp=self.create_timestamp(), message=msg)
+
+        try:
+            pb_response_stream = self.stub.MessageToStreamExample(pb_message)
+        except grpc.RpcError as rpc_error:
+            if rpc_error.code() == grpc.StatusCode.UNAVAILABLE:
+                raise RuntimeError(
+                    'Cannot connect to server, make sure it\'s running!') from rpc_error
+            else:
+                raise rpc_error
+
+        self.message_id += 1
+        return pb_response_stream

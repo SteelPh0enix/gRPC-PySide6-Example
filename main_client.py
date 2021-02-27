@@ -6,6 +6,7 @@ import logging
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import Property, QObject, Signal, Slot
+from google.protobuf.timestamp_pb2 import Timestamp
 
 from client_libs import grpc_client
 
@@ -22,6 +23,9 @@ class GUIController(QObject):
     def set_connection_status(self, new_status):
         self._connection_status_value = new_status
         self.connectionStatusChanged.emit(new_status)
+
+    def parse_timestamp(self, timestamp: Timestamp) -> float:
+        return timestamp.seconds + (timestamp.nanos / 10**9)
 
     responseReceived = Signal(int, str, str)
     responseError = Signal(str)
@@ -50,12 +54,22 @@ class GUIController(QObject):
                 self.responseError.emit(
                     'Communication error - check stdout for details')
                 logging.error(e)
-                return
 
     @Slot(str)
     def sendMessageGetStream(self, message: str):
         if self.check_connection_status():
-            pass
+            try:
+                response_iterator = self.grpc_client.send_message_receive_stream(
+                    message)
+
+                for response in response_iterator:
+                    self.responseReceived.emit(response.id, self.parse_timestamp(
+                        response.timestamp), response.message)
+
+            except Exception as e:
+                self.responseError.emit(
+                    'Communication error - check stdout for details')
+                logging.error(e)
 
     @Slot(str)
     def sendStreamGetMessage(self, message: str):

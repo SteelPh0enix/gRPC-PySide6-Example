@@ -21,8 +21,16 @@ class ExampleServicer(example_grpc.ExampleServiceServicer):
         return timestamp.seconds + (timestamp.nanos / 10**9)
 
     def MessageToMessageExample(self, request, context):
-        logging.info(f'[message-to-message] ID: {request.id}, timestamp: {self.parse_timestamp(request.timestamp)}, message: {request.message}')
-        return example_pb2.SimpleExampleResponse(id=request.id, timestamp=self.create_timestamp(), message=f'[server response] {request.message}')
+        logging.info(
+            f'[message-to-message] ID: {request.id}, timestamp: {self.parse_timestamp(request.timestamp)}, message: {request.message}')
+        return example_pb2.SimpleExampleResponse(id=request.id, timestamp=self.create_timestamp(), message=f'[server message response] {request.message}')
+
+    def MessageToStreamExample(self, request, context):
+        logging.info(
+            f'[message-to-stream] ID: {request.id}, timestamp: {self.parse_timestamp(request.timestamp)}, message: {request.message}')
+        for i in range(5):
+            time.sleep(0.2)
+            yield example_pb2.SimpleExampleResponse(id=request.id, timestamp=self.create_timestamp(), message=f'[server stream response #{i}] {request.message}')
 
 
 def main():
@@ -33,7 +41,8 @@ def main():
     arg_parser.add_argument('port', type=int, help='Server\'s port')
     arguments = arg_parser.parse_args()
 
-    logging.info(f'Starting the server on {arguments.ip_address}:{arguments.port}...')
+    logging.info(
+        f'Starting the server on {arguments.ip_address}:{arguments.port}...')
 
     grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
     example_grpc.add_ExampleServiceServicer_to_server(
