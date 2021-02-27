@@ -44,7 +44,7 @@ class GUIController(QObject):
                 response_id, response_timestamp, response_message = self.grpc_client.send_message_receive_message(
                     message)
                 self.responseReceived.emit(
-                    response_id, response_timestamp, response_message)
+                    response_id, str(response_timestamp), response_message)
 
             except Exception as e:
                 self.responseError.emit(

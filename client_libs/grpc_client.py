@@ -23,7 +23,7 @@ class GRPCClient():
 
     def send_message_receive_message(self, msg: str) -> Tuple[int, str, str]:
         pb_message = example_pb2.SimpleExampleMessage(
-            id=self.id, timestamp=self.create_timestamp(), message=msg)
+            id=self.message_id, timestamp=self.create_timestamp(), message=msg)
 
         try:
             pb_response = self.stub.MessageToMessageExample(pb_message)
