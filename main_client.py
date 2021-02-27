@@ -5,7 +5,7 @@ import logging
 
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import Property, QObject, Signal, Slot
+from PySide6.QtCore import Property, QCoreApplication, QObject, Signal, Slot
 from google.protobuf.timestamp_pb2 import Timestamp
 
 from client_libs import grpc_client
@@ -65,6 +65,7 @@ class GUIController(QObject):
                 for response in response_iterator:
                     self.responseReceived.emit(response.id, self.parse_timestamp(
                         response.timestamp), response.message)
+                    QCoreApplication.processEvents()
 
             except Exception as e:
                 self.responseError.emit(
