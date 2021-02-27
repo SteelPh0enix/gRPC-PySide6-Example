@@ -23,6 +23,7 @@ class GUIController(QObject):
         self.connectionStatusChanged.emit(new_status)
 
     responseReceived = Signal(int, str, str)
+    responseError = Signal(str)
     connectionStatusChanged = Signal(str)
 
     connectionStatus = Property(
@@ -30,14 +31,25 @@ class GUIController(QObject):
 
     def check_connection_status(self) -> bool:
         if self.grpc_client is None:
-            self.set_connection_status('Disconnected - connect to server before sending messages!')
+            self.set_connection_status(
+                'Disconnected - connect to server before sending messages!')
             return False
         return True
 
     @Slot(str)
     def sendMessageGetMessage(self, message: str):
         if self.check_connection_status():
-            pass
+            try:
+                response_id, response_timestamp, response_message = self.grpc_client.send_message_receive_message(
+                    message)
+                self.responseReceived.emit(
+                    response_id, response_timestamp, response_message)
+
+            except Exception as e:
+                self.responseError.emit(
+                    'Communication error - check stdout for details')
+                print(e)
+                return
 
     @Slot(str)
     def sendMessageGetStream(self, message: str):
@@ -71,12 +83,13 @@ class GUIController(QObject):
             self.grpc_client = None
             return
         except Exception as e:
-            self.set_connection_status('Unknown error occurred while connecting, check stdout for details')
+            self.set_connection_status(
+                'Unknown error occurred while connecting, check stdout for details')
             del self.grpc_client
             self.grpc_client = None
             print(e)
             return
-        
+
         self.set_connection_status('Connected!')
 
 

@@ -22,8 +22,13 @@ Window {
     Connections {
         id: responseConnection
         target: uiController
+
         function onResponseReceived(id, timestamp, data) {
             printResponse(id, timestamp, data)
+        }
+
+        function onResponseError(message) {
+            printLine('[ERROR] ' + message)
         }
     }
 
