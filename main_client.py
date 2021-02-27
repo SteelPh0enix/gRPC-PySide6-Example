@@ -28,30 +28,56 @@ class GUIController(QObject):
     connectionStatus = Property(
         str, _connection_status, notify=connectionStatusChanged)
 
+    def check_connection_status(self) -> bool:
+        if self.grpc_client is None:
+            self.set_connection_status('Disconnected - connect to server before sending messages!')
+            return False
+        return True
+
     @Slot(str)
     def sendMessageGetMessage(self, message: str):
-        pass
+        if self.check_connection_status():
+            pass
 
     @Slot(str)
     def sendMessageGetStream(self, message: str):
-        pass
+        if self.check_connection_status():
+            pass
 
     @Slot(str)
     def sendStreamGetMessage(self, message: str):
-        pass
+        if self.check_connection_status():
+            pass
 
     @Slot(str)
     def sendStreamGetStream(self, message: str):
-        pass
+        if self.check_connection_status():
+            pass
 
     @Slot(str, str)
     def connectToServer(self, ip: str, port: str):
+        self.set_connection_status('Connecting...')
         if ip is None or port is None or len(ip) < 7 or len(port) == 0:
-            self.set_connection_status('Invalid IP or port!')
+            self.set_connection_status('Invalid IP or port! Disconnected.')
             return
 
-        self.set_connection_status('Connecting...')
         self.grpc_client = grpc_client.GRPCClient(ip, port)
+        # Try to send a message to server, to check if the client has connected successfully
+        try:
+            self.grpc_client.send_message_receive_message('')
+        except RuntimeError as connection_error:
+            self.set_connection_status(str(connection_error))
+            del self.grpc_client
+            self.grpc_client = None
+            return
+        except Exception as e:
+            self.set_connection_status('Unknown error occurred while connecting, check stdout for details')
+            del self.grpc_client
+            self.grpc_client = None
+            print(e)
+            return
+        
+        self.set_connection_status('Connected!')
 
 
 if __name__ == "__main__":
