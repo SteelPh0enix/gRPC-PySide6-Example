@@ -2,6 +2,8 @@
 import sys
 import os
 import logging
+import threading
+from typing import Callable, Iterator
 
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
@@ -11,16 +13,45 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from client_libs import grpc_client
 
 
+class ThreadedStreamHandler(threading.Thread):
+    response_iterator = None
+    response_data_lock = threading.Lock()
+    data_handler = None
+    transmission_exception = None
+
+    def set_response_iterator(self, response_iterator: Iterator) -> None:
+        self.response_iterator = response_iterator
+
+    def set_data_handler(self, data_handler: Callable) -> None:
+        self.data_handler = data_handler
+
+    def run(self) -> None:
+        if self.response_iterator is None:
+            return
+
+        self.response_data_lock.acquire()
+
+        try:
+            for response in self.response_iterator:
+                self.data_handler(response)
+        except Exception as e:
+            self.transmission_exception = e
+
+        del self.response_iterator
+        self.response_iterator = None
+        self.response_data_lock.release()
+
+
 class GUIController(QObject):
     def __init__(self, parent):
         super().__init__(parent)
         self.grpc_client = None
         self._connection_status_value = 'Disconnected'
 
-    def _connection_status(self):
+    def _connection_status(self) -> str:
         return self._connection_status_value
 
-    def set_connection_status(self, new_status):
+    def set_connection_status(self, new_status: str) -> None:
         self._connection_status_value = new_status
         self.connectionStatusChanged.emit(new_status)
 
@@ -62,10 +93,27 @@ class GUIController(QObject):
                 response_iterator = self.grpc_client.send_message_receive_stream(
                     message)
 
-                for response in response_iterator:
-                    self.responseReceived.emit(response.id, self.parse_timestamp(
-                        response.timestamp), response.message)
+            #     for response in response_iterator:
+            #         self.responseReceived.emit(response.id, self.parse_timestamp(
+            #             response.timestamp), response.message)
+            #         QCoreApplication.processEvents()
+
+                stream_handler = ThreadedStreamHandler()
+                stream_handler.set_response_iterator(response_iterator)
+                stream_handler.set_data_handler(lambda response: self.responseReceived.emit(
+                    response.id, self.parse_timestamp(response.timestamp), response.message))
+                stream_handler.start()
+                print('thread started')
+
+                while stream_handler.response_data_lock.acquire(blocking=True, timeout=0.05) == False:
+                    print('processEvents')
                     QCoreApplication.processEvents()
+
+                stream_handler.response_data_lock.release()
+                print('done')
+
+                if stream_handler.transmission_exception is not None:
+                    raise stream_handler.transmission_exception
 
             except Exception as e:
                 self.responseError.emit(
