@@ -2,44 +2,13 @@
 import sys
 import os
 import logging
-import threading
-from typing import Callable, Iterator
 
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import Property, QCoreApplication, QObject, Signal, Slot
 from google.protobuf.timestamp_pb2 import Timestamp
 
-from client_libs import grpc_client
-
-
-class ThreadedStreamHandler(threading.Thread):
-    response_iterator = None
-    response_data_lock = threading.Lock()
-    data_handler = None
-    transmission_exception = None
-
-    def set_response_iterator(self, response_iterator: Iterator) -> None:
-        self.response_iterator = response_iterator
-
-    def set_data_handler(self, data_handler: Callable) -> None:
-        self.data_handler = data_handler
-
-    def run(self) -> None:
-        if self.response_iterator is None:
-            return
-
-        self.response_data_lock.acquire()
-
-        try:
-            for response in self.response_iterator:
-                self.data_handler(response)
-        except Exception as e:
-            self.transmission_exception = e
-
-        del self.response_iterator
-        self.response_iterator = None
-        self.response_data_lock.release()
+from client_libs import grpc_client, client_stream_handlers
 
 
 class GUIController(QObject):
@@ -98,7 +67,7 @@ class GUIController(QObject):
             #             response.timestamp), response.message)
             #         QCoreApplication.processEvents()
 
-                stream_handler = ThreadedStreamHandler()
+                stream_handler = client_stream_handlers.ThreadedStreamHandler()
                 stream_handler.set_response_iterator(response_iterator)
                 stream_handler.set_data_handler(lambda response: self.responseReceived.emit(
                     response.id, self.parse_timestamp(response.timestamp), response.message))
